@@ -68,6 +68,8 @@ public class PostsApiControllerTest {
 
     @Test
     public void Posts_수정된다() throws Exception{
+
+        //어떤 pk를 save할지 안써있는데 어떤걸 save하는거야?
         //given
         Posts savedPosts = postsRepository.save(Posts.builder()
                                                     .title("title")
@@ -76,7 +78,7 @@ public class PostsApiControllerTest {
                                                     .build());
 
 
-        Long updateId = savedPosts.getId();
+        Long updateId = savedPosts.getId(); //set id가 없는데 어떻게 가져오는거지?
         String expectedTitle = "title2";
         String expectedContent = "content2";
 

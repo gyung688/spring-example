@@ -23,16 +23,23 @@ public class PostsApiController {
         return postsService.save(requestDto);
     }
 
+    //수정
     @PutMapping("/api/v1/posts/{id}")
     public Long update(@PathVariable Long id, @RequestBody PostsUpdateRequestDto requestDto){
         System.out.println("putMapping");
         return postsService.update(id, requestDto);
     }
 
+    //조회
     @GetMapping("/api/v1/posts/{id}")
     public PostsResponseDto findById (@PathVariable Long id){
         System.out.println("GetMapping");
         return postsService.findById(id);
+    }
+
+    @GetMapping("/api")
+    public String api(){
+        return null;
     }
 
     @DeleteMapping("/api/v1/posts/{id}")
