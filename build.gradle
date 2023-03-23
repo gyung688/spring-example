@@ -41,10 +41,11 @@ dependencies {
 // 인메모리 관계형 데이터베이스. 메모리에서 실행되기 때문에 애플리케이션을 재시작할 때마다 초기화 된다는 점을 이용해 테스트 용도로 잘쓰임.
     implementation("com.h2database:h2")
     implementation('org.springframework.boot:spring-boot-starter-mustache')
-    implementation('org.springframework.boot:spring-boot-starter-oauth2-client')
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    implementation('org.springframework.boot:spring-boot-starter-oauth2-client')
+    implementation('org.springframework.session:spring-session-jdbc')
 
 //    implementation 'org.springframework.boot:spring-boot-starter-web'
 //// 스프링 부트용 Spring Data Jpa 추상화 라이브러리.
