@@ -1,0 +1,62 @@
+buildscript{
+    ext{ // le에서 사용하는 전역변수를 설정하겠다는 의미.
+         // springBootVersion이라는 전역변수를 생성하고 그 값을 2.1.7로 하겠다는 의미
+        springBootVersion = '2.1.7.RELEASE'
+    }
+    repositories{ //각종 의존성(라이브러리)들을 어떤 원격 저장소에서 받을 지 정한다.
+        mavenCentral()  // 기본적으로 전부터 많이 사용된 저장소이지만 본인이 만든
+                        // 라이브러리를 업로드하기 위해서는 정말 많은 과정과 설저이 필요하다.
+                        // 그래서 직접 만든 라이브러리를 업로드하는 것이 힘들어 공유가 안되는 상황이 발생
+        jcenter()       // 이건 그 문제점을 개선하여 라이브러리 업로드를 간단하게 함.
+                        // 또한 여기에 올리면 mavenCentral에도 자동 업로드
+    }
+
+    dependencies { // 프로젝트 개발에 필요한 의존성들을 선언하는 곳
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") // 위에 전역변수 쓴것
+    }
+}
+
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'org.springframework.boot' version '2.1.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE' // 스프링 부트의 의존성들을 관리해 주는 플로그인
+}
+
+group 'com.jojodu.book'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8 // 자바 버전
+
+repositories { // 각종 의존성들을 어떤 원격 저장소에서 받을지 정한다.
+    mavenCentral() // 내가 명시한 이 부분에서 라이브러리들을 다운받아라
+    jcenter()
+}
+
+dependencies {
+//    implementation : 개발할 때 내가 필요한 라이브러리를 적어 이 라이브러리를 가져와 달
+//    testImplementation : JAVA에서 테스트 코드를 작성할 때 필요한 라이브러리를 적는 곳
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+// 스프링 부트용 Spring Data Jpa 추상화 라이브러리.
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+// 인메모리 관계형 데이터베이스. 메모리에서 실행되기 때문에 애플리케이션을 재시작할 때마다 초기화 된다는 점을 이용해 테스트 용도로 잘쓰임.
+    implementation("com.h2database:h2")
+    implementation('org.springframework.boot:spring-boot-starter-mustache')
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    implementation('org.springframework.boot:spring-boot-starter-oauth2-client')
+    implementation('org.springframework.session:spring-session-jdbc')
+
+//    implementation 'org.springframework.boot:spring-boot-starter-web'
+//// 스프링 부트용 Spring Data Jpa 추상화 라이브러리.
+//    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+//// 인메모리 관계형 데이터베이스. 메모리에서 실행되기 때문에 애플리케이션을 재시작할 때마다 초기화 된다는 점을 이용해 테스트 용도로 잘쓰임.
+//    implementation("com.h2database:h2")
+//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    compileOnly 'org.projectlombok:lombok:1.18.10'
+//    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+}
+
+test {
+    useJUnitPlatform()
+}
