@@ -1,19 +1,29 @@
 package tacos.security;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
+	@Bean
+	public PasswordEncoder encoder() {
+		//PasswordEncoder타입의 빈을 선언 후 passwordencoder()를 호출하여 이 빈을 사용자 명세 서비스 config에 주입되게 한다.
+		return new BCryptPasswordEncoder();
+	}
+	
 	// HTTP보안을 구성하는 메서드
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
@@ -79,17 +89,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	 * 비밀번호 교환은 LDAP 서버에서 수행되므로 비밀번호는 노출되지 않는다.
 	 * LDAP인증 시 localhost:33389로 LDAP서버가 접속된다고 간주하지만 LDAP서버가 다른 컴퓨터에서 실행중이면 contextSource()를 통해 서버 위치를 구성할 수 있다.
 	 * */
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+//		auth.ldapAuthentication()
+//			.userSearchBase("ou=people")
+//			.userSearchFilter("(uid={0}")
+//			.groupSearchBase("ou=groups")
+//			.groupSearchFilter("member={0}")
+//			.contextSource()
+//			.root("dc=taccloud,dc=com")
+//			.ldif("classpath:users.ldif")
+//			.and()
+//			.passwordCompare()
+//			.passwordEncoder(new BCryptPasswordEncoder())
+//			.passwordAttribute("userPasscode");
+//	}
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-		auth.ldapAuthentication()
-			.userSearchBase("ou=people")
-			.userSearchFilter("(uid={0}")
-			.groupSearchBase("ou=groups")
-			.groupSearchFilter("member={0}")
-			.passwordCompare()
-			.passwordEncoder(new BCryptPasswordEncoder())
-			.passwordAttribute("userPasscode");
-//			.contextSource().url("ldap://tacocloud.com:389/dc=tacocloud,dc=com");
+		// SecurityConfig로 자동 주입된 UserDetailsService인스턴스를 인자로 전달하여 userDetailsService() 메서드 호출
+		// encoder()가 생성한 BCryptPasswordEncoder 인스턴스가 스프링 애플리케이션 컨텍스트에 등록, 관리되며
+		// 이 인스턴스가 애플리케이션 컨텍스트로부터 주입되어 반환된다.
+		// 이렇게 우리가 원하는 종류의 PasswordEncoder 빈 객체를 스프링의 관리하에 사용할 수 있다.
+		auth.userDetailsService(userDetailsService)
+			.passwordEncoder(encoder());
+		
 	}
 	
 	
