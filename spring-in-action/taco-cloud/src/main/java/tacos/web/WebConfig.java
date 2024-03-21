@@ -16,5 +16,6 @@ public class WebConfig implements WebMvcConfigurer{
 		// 그리고 "/" 경로의 요청이 전달되어야 하는 뷰로 home을 지정하기 위해 연달아 ViewControllerRegistration객체의 setViewName()을 호출한다.
 		// 이렇게 HomeController를 대체할 수 있다. HomeController를 삭제해도 잘 실행 될 것이다.
 		registry.addViewController("/").setViewName("home");
+		registry.addViewController("/login");
 	}
 }
