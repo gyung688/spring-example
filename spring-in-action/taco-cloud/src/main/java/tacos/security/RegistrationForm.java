@@ -17,7 +17,8 @@ public class RegistrationForm {
 	private String zip;
 	private String phone;
 	
-	public User toUser(PasswordEncoder passwordEncoder) {
+	public User toUser(PasswordEncoder passwordEncoder) { 
+		// RegistrationForm의 속성 값을 갖는 새로운 User객체 생성
 		return new User(username, passwordEncoder.encode(password), 
 						fullname, street, city, state, zip, phone);
 	}

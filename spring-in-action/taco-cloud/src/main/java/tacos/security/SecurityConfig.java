@@ -25,14 +25,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	}
 	
 	// HTTP보안을 구성하는 메서드
+	// HtpSecurity : 웹 수준에서 보안을 처리하는 방법을 구성.
+	//		HTTP요청 처리를 허용하기 전에 충족되어야 할 특정 보안 조건을 구성.(=권한 확인. 제일 많이함.)
+	//		커스텀 로그인 페이지 구성.
+	//		사용자가 애플리케이션의 로그아웃을 할 수 있도록 함.
+	//		CSRF공격으로부터 보호하도록 구성.(크로스 사이트 요청 위조: 위조된 페이지에서 로그인
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
-				.antMatchers("/design", "/orders")
-					.access("hasRole('ROLE_USER')")
-						.antMatchers("/", "/**").access("permitAll")
+			.antMatchers("/design", "/orders") // 지정된 경로의 패턴 일치를 검사.
+			.access("hasRole('ROLE_USER')")
+			.antMatchers("/", "/**").access("permitAll")
 			.and()
-				.httpBasic();
+			.formLogin()
+			.loginPage("/login")
+			.loginProcessingUrl("/authenticate")
+			.usernameParameter("user")
+			.passwordParameter("pwd")
+			.defaultSuccessUrl("/design", true) //사용자가 있던 페이지가 아닌 특정 페이지로 무조건 이동하게 만들고싶으면 뒤에 true를 붙여줌.
+			.and()
+			.logout()
+			.logoutSuccessUrl("/") // 세션 종료 후 애플리케이션에서 로그아웃된다.
+			.and()
+			.csrf()
+			;
+//			.access("hasRole('ROLE_USER') &&"
+//					+ "T(java.util.Calendar).getInstance().get(T(java.util.Calendar).DAY_OF_WEEK) "
+//					+ "== T(java.util.Calendar).TUESDAY"); // 화요일이고 role_user이어야만 인증
 	}
 	
 	/*
