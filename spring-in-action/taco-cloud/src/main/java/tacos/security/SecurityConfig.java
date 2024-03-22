@@ -33,21 +33,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
-			.antMatchers("/design", "/orders") // 지정된 경로의 패턴 일치를 검사.
-			.access("hasRole('ROLE_USER')")
-			.antMatchers("/", "/**").access("permitAll")
+				.antMatchers("/design", "/orders") // 지정된 경로의 패턴 일치를 검사.
+				.access("hasRole('ROLE_USER')")
+				.antMatchers("/", "/**").access("permitAll")
 			.and()
-			.formLogin()
-			.loginPage("/login")
-			.loginProcessingUrl("/authenticate")
-			.usernameParameter("user")
-			.passwordParameter("pwd")
-			.defaultSuccessUrl("/design", true) //사용자가 있던 페이지가 아닌 특정 페이지로 무조건 이동하게 만들고싶으면 뒤에 true를 붙여줌.
+				.formLogin()
+				.loginPage("/login")
+//				.loginProcessingUrl("/authenticate")
+//				.usernameParameter("user")
+//				.passwordParameter("pwd")
+//				.defaultSuccessUrl("/design", true) //사용자가 있던 페이지가 아닌 특정 페이지로 무조건 이동하게 만들고싶으면 뒤에 true를 붙여줌.
 			.and()
-			.logout()
-			.logoutSuccessUrl("/") // 세션 종료 후 애플리케이션에서 로그아웃된다.
+				.logout()
+				.logoutSuccessUrl("/") // 세션 종료 후 애플리케이션에서 로그아웃된다.
 			.and()
-			.csrf()
+				.csrf()
 			;
 //			.access("hasRole('ROLE_USER') &&"
 //					+ "T(java.util.Calendar).getInstance().get(T(java.util.Calendar).DAY_OF_WEEK) "
@@ -132,7 +132,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		// 이렇게 우리가 원하는 종류의 PasswordEncoder 빈 객체를 스프링의 관리하에 사용할 수 있다.
 		auth.userDetailsService(userDetailsService)
 			.passwordEncoder(encoder());
-		
 	}
 	
 	
