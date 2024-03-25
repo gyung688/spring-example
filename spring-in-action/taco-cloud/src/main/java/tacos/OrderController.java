@@ -2,8 +2,11 @@ package tacos;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import lombok.extern.slf4j.Slf4j;
 import tacos.data.OrderRepository;
+import tacos.web.OrderProps;
 
 @Slf4j
 @Controller
@@ -23,8 +27,11 @@ public class OrderController {
 
 	private OrderRepository orderRepo;
 	
-	public OrderController(OrderRepository orderRepo) {
+	private OrderProps props;
+	
+	public OrderController(OrderRepository orderRepo, OrderProps props) {
 		this.orderRepo = orderRepo;
+		this.props = props;
 	}
 	
 	@GetMapping("/current")
@@ -76,5 +83,17 @@ public class OrderController {
 		
 		log.info("Order submitted: " + order);
 		return "redirect:/";
+	}
+
+	/*
+	 * pageable : 페이지 번호와 크기로 결과의 일부분을 선택할 수 있다
+	 * */
+	@GetMapping
+	public String ordersForUser(@AuthenticationPrincipal User user, Model model){
+		
+		Pageable pageable = PageRequest.of(0, props.getPageSize()); // 페이지 크기가 pageSize(20)인 첫번째 페이지 요청
+		model.addAttribute("orders", orderRepo.findByUserOrderByPlacedAtDesc(user, pageable));
+		
+		return "orderList";
 	}
 }

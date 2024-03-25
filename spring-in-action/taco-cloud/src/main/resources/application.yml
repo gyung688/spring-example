@@ -1,0 +1,8 @@
+taco:
+ orders:
+  pageSize
+
+spring:
+ profiles:
+  active:
+  - prod 
